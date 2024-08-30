@@ -7,6 +7,7 @@ export interface restaurant {
 }
 
 export interface menu {
+  id:number
   price: number
   item_name: string
   item_description: string
