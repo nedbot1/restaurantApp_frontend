@@ -5,27 +5,40 @@ import EndSessionButton from "@/app/services/session";
 import type { Order } from "@/app/type/restaurant_type";
 
 const Page = ({ session_id }: { session_id: string }) => {
-  const [order, setOrder] = useState <Order[]>([]);
-  const loadOrder = async () => {
+  const [orders, setOrders] = useState<Order[]>([]);
+
+  const loadOrders = async () => {
     try {
       const { data } = await fetchOrder();
-      setOrder(data); // Ensure the data has the correct shape
+      setOrders(data); // Ensure the data has the correct shape
+      console.log(data)
     } catch (error) {
       console.error("Error fetching orders", error);
     }
   };
 
+  const updateOrderStatus = (id: string) => {
+    setOrders((prevOrders: Order[]) =>
+      prevOrders.map((order) =>
+        order.id === id
+          ? { ...order, payed_at: new Date() }
+          : order
+      )
+    );
+  };
+
   useEffect(() => {
-    loadOrder();
+    loadOrders();
   }, []);
+  
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <h1 className="text-2xl font-semibold text-gray-700 mb-6">Order List</h1>
       <div className="grid gap-6">
-        {order.map((item, index) => (
+        {orders.map((item) => (
           <div
-            key={index}
+            key={item.id}
             className="bg-white rounded-lg shadow p-6 border border-gray-200"
           >
             <div className="text-gray-500 text-sm mb-2">
@@ -48,12 +61,12 @@ const Page = ({ session_id }: { session_id: string }) => {
             <div className="text-gray-700 text-lg font-semibold mb-4">
               ID: {item.id}
             </div>
-            {!item.payed_at && (
-              <EndSessionButton
-                session_id={item.session_id}
-              />
-            )}
-            <div>{item.session_id} hello</div>
+            <EndSessionButton
+              session_id={item.session_id}
+              isPaid={!!item.payed_at}
+              onStatusChange={(id:string)=>updateOrderStatus(id)}
+              order_id = {item.id}
+            />
           </div>
         ))}
       </div>
