@@ -11,7 +11,7 @@ const Page = ({ session_id }: { session_id: string }) => {
     try {
       const { data } = await fetchOrder();
       setOrders(data); // Ensure the data has the correct shape
-      console.log(data)
+      console.log(data,"my data")
     } catch (error) {
       console.error("Error fetching orders", error);
     }
@@ -34,39 +34,57 @@ const Page = ({ session_id }: { session_id: string }) => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-2xl font-semibold text-gray-700 mb-6">Order List</h1>
+      <h1 className="text-2xl font-semibold text-gray-700">Order</h1>
       <div className="grid gap-6">
         {orders.map((item) => (
           <div
             key={item.id}
-            className="bg-white rounded-lg shadow p-6 border border-gray-200"
+            className="bg-white rounded-lg shadow p-6 border border-gray-200 flex"
           >
-            <div className="text-gray-500 text-sm mb-2">
-              <strong>Ordered At:</strong>{" "}
-              {new Date(item.ordered_at).toLocaleString()}
+            {/* Order Details */}
+            <div className="flex-1 border-2 mr-2 rounded-lg p-10 text">
+              <div className="text-gray-500 text-sm mb-2 ">
+                <strong>Ordered At:</strong>{" "}
+                {new Date(item.ordered_at).toLocaleString()}
+              </div>
+              <div className="text-gray-500 text-sm mb-2">
+                <strong>Status:</strong>{" "}
+                {item.payed_at ? (
+                  <span className="text-green-500 font-semibold">
+                    Paid on {new Date(item.payed_at).toLocaleString()}
+                  </span>
+                ) : (
+                  <span className="text-yellow-500 font-semibold">Pending</span>
+                )}
+              </div>
+              <div className="text-gray-700 text-lg font-semibold  mb-8">
+                Total Amount: ${item.total_amount}
+              </div>
+              <EndSessionButton
+                session_id={item.session_id}
+                isPaid={!!item.payed_at}
+                onStatusChange={(id: string) => updateOrderStatus(id)}
+                order_id={item.id}
+              />
             </div>
-            <div className="text-gray-500 text-sm mb-2">
-              <strong>Status:</strong>{" "}
-              {item.payed_at ? (
-                <span className="text-green-500 font-semibold">
-                  Paid on {new Date(item.payed_at).toLocaleString()}
-                </span>
-              ) : (
-                <span className="text-yellow-500 font-semibold">Pending</span>
-              )}
+
+            {/* Order List */}
+            <div className="flex-1">
+              <h3 className="text-gray-700 text-lg font-semibold mb-2">
+                Order List:
+              </h3>
+              {item.order_lists.map((list) => (
+                <div
+                  key={list.id}
+                  className="bg-gray-50 p-4 mb-4 rounded-lg border border-gray-200"
+                >
+                  <p className="text-gray-600">Quantity: {list.quantity}</p>
+                  <p className="text-gray-600">
+                    Total Price: ${list.total_price}
+                  </p>
+                </div>
+              ))}
             </div>
-            <div className="text-gray-700 text-lg font-semibold mb-4">
-              Total Amount: ${item.total_amount}
-            </div>
-            <div className="text-gray-700 text-lg font-semibold mb-4">
-              ID: {item.id}
-            </div>
-            <EndSessionButton
-              session_id={item.session_id}
-              isPaid={!!item.payed_at}
-              onStatusChange={(id:string)=>updateOrderStatus(id)}
-              order_id = {item.id}
-            />
           </div>
         ))}
       </div>
