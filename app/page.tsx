@@ -3,6 +3,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -85,6 +86,11 @@ export default function Login() {
           Login
         </button>
         {error && <div className="mb-4 text-red-500 text-sm">{error}</div>}
+      </div>
+      <div>
+        <Link href={"/page/home"}>
+          go to home
+        </Link>
       </div>
     </div>
   );

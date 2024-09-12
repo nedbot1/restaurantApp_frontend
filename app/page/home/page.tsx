@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import React from "react";
-import { fetchMenu, fetchTable } from "@/app/services/fetchRestaurant";
+import { fetchMenu, fetchTable } from "@/app/services/services";
 import type {
   restaurant,
   menu,
   table,
   session,
-} from "@/app/type/restaurant_type";
+} from "@/app/type/type";
 
 export default function Homepage() {
   const [tables, setTables] = useState<table[]>([]);
@@ -183,6 +183,7 @@ const handleSubmitOrder = async () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
+      <h1>hhhh</h1>
       {!selectedTable && (
         <div className="flex flex-wrap justify-center mb-8">
           {tables.map((item, index) => (

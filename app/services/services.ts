@@ -1,8 +1,10 @@
 
-import type { restaurant, menu, table, session, Order } from "../type/restaurant_type";
+import type { restaurant, menu, table, session, Order } from "../type/type";
 
 export async function fetchRestaurant(): Promise<{ data: restaurant[] }>{
-    const response = await fetch("http://localhost:4000/api/restaurants");
+    const response = await fetch(
+      `${process.env.API_URL}/api/restaurants`
+    );
     if (!response.ok) {
     throw new Error('Failed to fetch restaurant');
   }
@@ -19,16 +21,51 @@ export async function fetchMenu(): Promise<{ data: menu[] }>{
 }
 
 export async function fetchTable(): Promise<{ data: table[] }> {
-    const response = await fetch('http://localhost:4000/api/tables')
+    const response = await fetch(
+      "https://93c4-119-2-104-121.ngrok-free.app/api/tables", {
+        headers: {
+        'ngrok-skip-browser-warning': 'true',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+        }
+      }
+    );
     if (!response.ok) {
-        throw new Error('failed to fetch tables')
+      throw new Error('failed to fetch tables')
     }
-    return response.json()
+  
+  console.log(response, "my res")
+  return response.json()
+
+  // try {
+  //   const response = await fetch(
+  //     `https://93c4-119-2-104-121.ngrok-free.app/api/tables`
+  //   );
+  //   if (!response.ok) {
+  //     throw new Error(`HTTP error! Status: ${response.status}`);
+  //   }
+  //   const contentType = response.headers.get("Content-Type");
+  //   if (contentType && contentType.includes("text/html")) {
+  //     const text = await response.text();
+  //     throw new Error(`Unexpected HTML response: ${text}`);
+  //   }
+  //   const data = await response.json();
+  //   console.log("Table data:", data);
+  // } catch (error) {
+  //   console.error("Error fetching tables:", error);
+  // }
 }
 
 
 export async function fetchOrder(): Promise<{ data: Order[] }>{
     const response = await fetch('http://localhost:4000/api/orders')
+    if (!response.ok) {
+        throw new Error('failed to fetch orders')
+    }
+    return response.json()
+}
+export async function fetchUnpaidOrder(): Promise<{ data: Order[] }>{
+    const response = await fetch('http://localhost:4000/api/orders/unpaid')
     if (!response.ok) {
         throw new Error('failed to fetch orders')
     }

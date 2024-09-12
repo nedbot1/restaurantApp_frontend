@@ -37,5 +37,6 @@ export interface Order {
   payed_at: Date
   total_amount: number
   session_id: string,
-  order_lists: any
+  order_lists: any,
+  table_number:string
 }
