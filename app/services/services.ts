@@ -3,7 +3,7 @@ import type { restaurant, menu, table, session, Order } from "../type/type";
 
 export async function fetchRestaurant(): Promise<{ data: restaurant[] }>{
     const response = await fetch(
-      `${process.env.API_URL}/api/restaurants`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/restaurants`
     );
     if (!response.ok) {
     throw new Error('Failed to fetch restaurant');
@@ -13,7 +13,7 @@ export async function fetchRestaurant(): Promise<{ data: restaurant[] }>{
 
 export async function fetchMenu(): Promise<{ data: menu[] }>{
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/menus`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/menus`,
       {
         headers: {
           "ngrok-skip-browser-warning": "true",
@@ -30,7 +30,7 @@ export async function fetchMenu(): Promise<{ data: menu[] }>{
 
 export async function fetchTable(): Promise<{ data: table[] }> {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tables`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/tables`,
       {
         headers: {
           "ngrok-skip-browser-warning": "true",
@@ -67,7 +67,7 @@ export async function fetchTable(): Promise<{ data: table[] }> {
 
 export async function fetchOrder(): Promise<{ data: Order[] }>{
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/orders`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/orders`,
       {
         headers: {
           "ngrok-skip-browser-warning": "true",
@@ -83,7 +83,7 @@ export async function fetchOrder(): Promise<{ data: Order[] }>{
 }
 export async function fetchUnpaidOrder(): Promise<{ data: Order[] }>{
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/orders/unpaid`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/orders/unpaid`,
     {
       headers: {
         "ngrok-skip-browser-warning": "true",
@@ -103,7 +103,7 @@ export async function updatePayment(
 ): Promise<{ data: Order }> {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/orders/${order_id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/orders/${order_id}`,
       {
         method: "PATCH", // PATCH is more appropriate for updates
         headers: {

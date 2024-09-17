@@ -64,7 +64,7 @@ export default function Homepage() {
   const startSession = async (tableId: string) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/sessions`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/sessions`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -160,7 +160,7 @@ const handleSubmitOrder = async () => {
   console.log(orderToSubmit, "order being submitted");
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/orders`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ order: orderToSubmit }), // Send the constructed order
@@ -200,7 +200,7 @@ const handleSubmitOrder = async () => {
               <h1 className="text-3xl font-semibold text-gray-800 mb-2">
                 {`Table ${item.table_number}`}
               </h1>
-              <p className="text-xl text-gray-600">{`QR Code: ${item.qr_code}`}</p>
+              <p className="text-xl text-gray-600">{`QR Code: ${item.id}`}</p>
             </button>
           ))}
         </div>
