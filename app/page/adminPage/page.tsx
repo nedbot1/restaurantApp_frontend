@@ -5,7 +5,7 @@ import Modal from "@/app/component/modal";// Importing the Modal
 import Button from "@/app/component/button";
 import type { Order } from "@/app/type/type";
 
-const AdminPage = ({ session_id }: { session_id: string }) => {
+ export default function AdminPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // For modal state
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null); // For the selected order in modal
@@ -126,5 +126,3 @@ const AdminPage = ({ session_id }: { session_id: string }) => {
     </div>
   );
 };
-
-export default AdminPage;
