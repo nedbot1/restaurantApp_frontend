@@ -12,8 +12,16 @@ export async function fetchRestaurant(): Promise<{ data: restaurant[] }>{
 }
 
 export async function fetchMenu(): Promise<{ data: menu[] }>{
-    const response = await fetch(`http://localhost:4000/api/menus
-`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/menus`,
+      {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    );
     if (!response.ok) { 
         throw new Error('Failed to fetch dishes');
     }
@@ -22,19 +30,19 @@ export async function fetchMenu(): Promise<{ data: menu[] }>{
 
 export async function fetchTable(): Promise<{ data: table[] }> {
     const response = await fetch(
-      "https://93c4-119-2-104-121.ngrok-free.app/api/tables", {
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/tables`,
+      {
         headers: {
-        'ngrok-skip-browser-warning': 'true',
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-        }
+          "ngrok-skip-browser-warning": "true",
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
       }
     );
     if (!response.ok) {
       throw new Error('failed to fetch tables')
     }
   
-  console.log(response, "my res")
   return response.json()
 
   // try {
@@ -58,14 +66,32 @@ export async function fetchTable(): Promise<{ data: table[] }> {
 
 
 export async function fetchOrder(): Promise<{ data: Order[] }>{
-    const response = await fetch('http://localhost:4000/api/orders')
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/orders`,
+      {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    );
     if (!response.ok) {
         throw new Error('failed to fetch orders')
     }
     return response.json()
 }
 export async function fetchUnpaidOrder(): Promise<{ data: Order[] }>{
-    const response = await fetch('http://localhost:4000/api/orders/unpaid')
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/orders/unpaid`,
+    {
+      headers: {
+        "ngrok-skip-browser-warning": "true",
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    }
+  );
     if (!response.ok) {
         throw new Error('failed to fetch orders')
     }
@@ -77,16 +103,18 @@ export async function updatePayment(
 ): Promise<{ data: Order }> {
   try {
     const response = await fetch(
-      `http://localhost:4000/api/orders/${order_id}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/orders/${order_id}`,
       {
         method: "PATCH", // PATCH is more appropriate for updates
         headers: {
+          "ngrok-skip-browser-warning": "true",
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify({
           order: {
-            payed_at: new Date().toISOString(), 
-          }, 
+            payed_at: new Date().toISOString(),
+          },
         }),
       }
     );

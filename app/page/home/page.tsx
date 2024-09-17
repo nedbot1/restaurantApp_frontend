@@ -37,7 +37,7 @@ export default function Homepage() {
     try {
       const data = await fetchMenu();
       setDishes(data.data);
-      // console.log(data, "my menu data");
+     console.log(data, "my menu data");
     } catch (error) {
       console.error("error fetching menu", error);
     }
@@ -63,11 +63,14 @@ export default function Homepage() {
 
   const startSession = async (tableId: string) => {
     try {
-      const response = await fetch("http://localhost:4000/api/sessions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session: { table_id: tableId } }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/sessions`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ session: { table_id: tableId } }),
+        }
+      );
       const { data } = await response.json();
       setSessionToken(data);
       setSessionEndTime(new Date(data.end_time));// Save session token to track the session
@@ -157,7 +160,7 @@ const handleSubmitOrder = async () => {
   console.log(orderToSubmit, "order being submitted");
 
   try {
-    const response = await fetch("http://localhost:4000/api/orders", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/orders`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ order: orderToSubmit }), // Send the constructed order
@@ -183,7 +186,6 @@ const handleSubmitOrder = async () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      <h1>hhhh</h1>
       {!selectedTable && (
         <div className="flex flex-wrap justify-center mb-8">
           {tables.map((item, index) => (
