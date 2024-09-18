@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import React from "react";
+import Image from "next/image";
 import { fetchMenu, fetchTable } from "@/app/services/services";
 import type {
   restaurant,
@@ -14,10 +15,7 @@ import type {
 export default function Homepage() {
   const searchParams = useSearchParams();
   const table_id = searchParams.get("table_id");
-  // console.log(table_id)
-  // Get the table_id from query parameters
 
-  const [tables, setTables] = useState<table[]>([]);
   const [dishes, setDishes] = useState<menu[]>([]);
   const [selectedTable, setSelectedTable] = useState<string | null>(null);
   const [cart, setCart] = useState<{
@@ -29,7 +27,7 @@ export default function Homepage() {
 
   useEffect(() => {
     if (table_id) {
-      handleTableClick(table_id);
+      handleQrScan(table_id);
        // Fetch menu based on table_id
       fetchMenu();    }
   }, [table_id]);
@@ -45,13 +43,13 @@ export default function Homepage() {
     }
   };
 
-  useEffect(() => {
-  }, [sessionToken]);
+  // useEffect(() => {
+  // }, [sessionToken]);
 
   // Handle table selection and load the menu for that table
-  const handleTableClick = (table: string) => {
-    setSelectedTable(table);
-    startSession(table)
+  const handleQrScan = (tableId: string) => {
+    setSelectedTable(tableId);
+    startSession(tableId)
     loadMenu();
   };
 
@@ -79,7 +77,6 @@ export default function Homepage() {
       const existingItem = prevCart[dish.id];
       const updatedQuantity = existingItem ? existingItem.quantity + 1 : 1;
       const updatedTotalPrice = updatedQuantity * dish.price;
-
       return {
         ...prevCart,
         [dish.id]: {
@@ -195,7 +192,7 @@ export default function Homepage() {
                   className="bg-white rounded-xl shadow-xl overflow-hidden transform transition-transform hover:scale-105 hover:shadow-2xl duration-300"
                   style={{ minWidth: "250px", minHeight: "300px" }}
                 >
-                  <img
+                  <Image
                     className="w-full h-56 object-cover"
                     src={dish.dish_photo_link}
                     alt={dish.item_name}
