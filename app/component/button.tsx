@@ -4,6 +4,7 @@ type EndSessionButtonProps = {
   session_id: string;
   isPaid: boolean;
   order_id: string
+  onClose: any
   onStatusChange: (id: string) => void;
 }
 
@@ -12,7 +13,8 @@ const Button: React.FC<EndSessionButtonProps> = ({
   session_id,
   isPaid,
   onStatusChange,
-  order_id
+  order_id,
+  onClose
 }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +33,7 @@ const Button: React.FC<EndSessionButtonProps> = ({
   return (
     <div>
       <button
-        className={"py-2 px-4 rounded font-bold transition duration-200  text-white"}
+        className={"py-2 px-4 rounded font-bold transition duration-200  text-black"}
         onClick={handlePaid}
         disabled={loading}
       >

@@ -105,7 +105,7 @@ export async function updatePayment(
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/orders/${order_id}`,
       {
-        method: "PATCH", // PATCH is more appropriate for updates
+        method: "PUT", // PATCH is more appropriate for updates
         headers: {
           "ngrok-skip-browser-warning": "true",
           "Content-Type": "application/json",

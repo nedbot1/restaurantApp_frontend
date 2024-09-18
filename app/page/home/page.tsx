@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 import { fetchMenu, fetchTable } from "@/app/services/services";
 import type {
@@ -11,54 +12,47 @@ import type {
 } from "@/app/type/type";
 
 export default function Homepage() {
+  const searchParams = useSearchParams();
+  const table_id = searchParams.get("table_id");
+  // console.log(table_id)
+  // Get the table_id from query parameters
+
   const [tables, setTables] = useState<table[]>([]);
   const [dishes, setDishes] = useState<menu[]>([]);
-  const [selectedTable, setSelectedTable] = useState<table | null>(null);
+  const [selectedTable, setSelectedTable] = useState<string | null>(null);
   const [cart, setCart] = useState<{
     [key: string]: { dish: menu; quantity: number; totalPrice: number };
   }>({});
   const [sessionToken, setSessionToken] = useState<session | null>(null);
   const [totalAmount, setTotalAmount] = useState<number>(0);
-  const [SessionEndTime, setSessionEndTime] = useState<Date | null>(null); 
+  const [SessionEndTime, setSessionEndTime] = useState<Date | null>(null);
 
-
-  // Fetch tables data
-  const loadTable = async () => {
-    try {
-      const data = await fetchTable();
-      setTables(data.data);
-    } catch (error) {
-      console.error("error fetching tables", error);
-    }
-  };
+  useEffect(() => {
+    if (table_id) {
+      handleTableClick(table_id);
+       // Fetch menu based on table_id
+      fetchMenu();    }
+  }, [table_id]);
 
   // Fetch menu data
   const loadMenu = async () => {
     try {
       const data = await fetchMenu();
       setDishes(data.data);
-     console.log(data, "my menu data");
+      console.log(data, "my menu data");
     } catch (error) {
       console.error("error fetching menu", error);
     }
   };
 
-  // Trigger fetching of tables and menus when the component mounts
   useEffect(() => {
-    loadTable();
-  }, []);
-
-  useEffect(() => {
-    // if (sessionToken) {
-    //   console.log("session_token", sessionToken);
-    // }
   }, [sessionToken]);
 
   // Handle table selection and load the menu for that table
-  const handleTableClick = (table: table) => {
+  const handleTableClick = (table: string) => {
     setSelectedTable(table);
-    // console.log("my table data", table);
-    loadMenu(); // Simulate the user scanning the QR code and loading the menu
+    startSession(table)
+    loadMenu();
   };
 
   const startSession = async (tableId: string) => {
@@ -73,7 +67,7 @@ export default function Homepage() {
       );
       const { data } = await response.json();
       setSessionToken(data);
-      setSessionEndTime(new Date(data.end_time));// Save session token to track the session
+      setSessionEndTime(new Date(data.end_time)); // Save session token to track the session
     } catch (error) {
       console.error("Error starting session:", error);
     }
@@ -129,87 +123,69 @@ export default function Homepage() {
     setTotalAmount(newTotalAmount);
   }, [cart]);
 
-const handleSubmitOrder = async () => {
-  if (!sessionToken) {
-    alert("No session started. Please select a table.");
-    return;
-  }
-
-  const now = new Date();
-  if (SessionEndTime && now > SessionEndTime) {
-    alert("Session has expired. You cannot place an order.");
-    return;
-  }
-
-  if (totalAmount === 0) {
-    alert("Cannot place empty order");
-    return;
-  }
-
-  // Construct the order dynamically here
-  const orderToSubmit = {
-    session_id: sessionToken.id, // Use the session token from the backend
-    total_amount: totalAmount,
-    order_lists: Object.values(cart).map((item) => ({
-      menu_item_id: item.dish.id,
-      quantity: item.quantity,
-      total_price: item.totalPrice,
-    })),
-  };
-
-  console.log(orderToSubmit, "order being submitted");
-
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ order: orderToSubmit }), // Send the constructed order
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      alert("Order placed successfully!");
-      // Optionally reset cart or navigate to another page
-      setCart({});
-      setTotalAmount(0);
-    } else {
-      console.error("Error placing order:", response.statusText);
-      alert("error placing order.");
+  const handleSubmitOrder = async () => {
+    if (!sessionToken) {
+      alert("No session started. Please select a table.");
+      return;
     }
-  } catch (error) {
-    console.error("Error placing order:", error);
-    alert("An error occurred while placing your order.");
-  }
-};
 
+    const now = new Date();
+    if (SessionEndTime && now > SessionEndTime) {
+      alert("Session has expired. You cannot place an order.");
+      return;
+    }
+
+    if (totalAmount === 0) {
+      alert("Cannot place empty order");
+      return;
+    }
+
+    // Construct the order dynamically here
+    const orderToSubmit = {
+      session_id: sessionToken.id, // Use the session token from the backend
+      total_amount: totalAmount,
+      order_lists: Object.values(cart).map((item) => ({
+        menu_item_id: item.dish.id,
+        quantity: item.quantity,
+        total_price: item.totalPrice,
+      })),
+    };
+
+    console.log(orderToSubmit, "order being submitted");
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/orders`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ order: orderToSubmit }), // Send the constructed order
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Order placed successfully!");
+        // Optionally reset cart or navigate to another page
+        setCart({});
+        setTotalAmount(0);
+      } else {
+        console.error("Error placing order:", response.statusText);
+        alert("error placing order.");
+      }
+    } catch (error) {
+      console.error("Error placing order:", error);
+      alert("An error occurred while placing your order.");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      {!selectedTable && (
-        <div className="flex flex-wrap justify-center mb-8">
-          {tables.map((item, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                startSession(item.id);
-                handleTableClick(item);
-              }}
-              className="bg-white rounded-lg shadow-lg p-6 m-4 w-full max-w-xs transform transition-transform hover:scale-105 hover:shadow-xl duration-300"
-            >
-              <h1 className="text-3xl font-semibold text-gray-800 mb-2">
-                {`Table ${item.table_number}`}
-              </h1>
-              <p className="text-xl text-gray-600">{`QR Code: ${item.id}`}</p>
-            </button>
-          ))}
-        </div>
-      )}
-
       {selectedTable && (
         <div className="">
           <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">
-            Menu for Table {selectedTable.table_number}
+            Menu for Table
           </h2>
           <div className="overflow-x-auto">
             <div className="inline-flex space-x-6 p-4">

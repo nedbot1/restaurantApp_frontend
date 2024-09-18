@@ -120,6 +120,7 @@ import type { Order } from "@/app/type/type";
             isPaid={!!selectedOrder.payed_at}
             onStatusChange={() => updateOrderStatus(selectedOrder.id)}
             order_id={selectedOrder.id}
+            onClose={closeModal}
           />
         )}
       </Modal>
