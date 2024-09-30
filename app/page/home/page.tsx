@@ -13,9 +13,7 @@ import type {
 
 export default function Homepage() {
   const searchParams = useSearchParams();
-  const table_id = searchParams.get("table_id");
-  // console.log(table_id)
-  // Get the table_id from query parameters
+  const table_id = searchParams.get("table_id"); // Get the table_id from query parameters
 
   const [tables, setTables] = useState<table[]>([]);
   const [dishes, setDishes] = useState<menu[]>([]);
@@ -29,13 +27,13 @@ export default function Homepage() {
 
   useEffect(() => {
     if (table_id) {
-      handleTableClick(table_id);
-       // Fetch menu based on table_id
-      fetchMenu();    }
+      handleTableClick(table_id); // Fetch menu based on table_id
+      fetchMenu();
+    }
   }, [table_id]);
 
-  // Fetch menu data
-  const loadMenu = async () => {
+  
+  const loadMenu = async () => {     // Fetch menu data
     try {
       const data = await fetchMenu();
       setDishes(data.data);
@@ -45,13 +43,12 @@ export default function Homepage() {
     }
   };
 
-  useEffect(() => {
-  }, [sessionToken]);
+  useEffect(() => {}, [sessionToken]);
 
-  // Handle table selection and load the menu for that table
-  const handleTableClick = (table: string) => {
+  
+  const handleTableClick = (table: string) => {   // Handle table selection and load the menu for that table
     setSelectedTable(table);
-    startSession(table)
+    startSession(table);
     loadMenu();
   };
 
