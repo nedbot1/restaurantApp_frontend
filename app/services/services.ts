@@ -9,7 +9,7 @@ export async function fetchRestaurant(): Promise<{ data: restaurant[] }>{
     throw new Error('Failed to fetch restaurant');
   }
   return response.json();
-}
+}               
 
 export async function fetchMenu(): Promise<{ data: menu[] }>{
     const response = await fetch(

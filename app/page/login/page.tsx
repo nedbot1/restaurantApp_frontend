@@ -1,41 +1,26 @@
 "use client";
-
+import { UserLogin } from "@/app/services/login";
 import { useState } from "react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import type { LoginResponse} from "@/app/type/login";
 
-export default function Login() {
-  const [username, setUsername] = useState("");
+export default function LoginPage() {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const router = useRouter();
-    
+  const [userToken, setUserToken] = useState<LoginResponse | null>(null); // Hold token and account data
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter()
+
   const handleLogin = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/accounts/login`,
-        {
-          method: "POST",
-          headers: {
-            "ngrok-skip-browser-warning": "true",
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({ username, password }),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Something went wrong");
-      }
-
-      const data = await response.json();
-      localStorage.setItem("accessToken", data.accessToken);
-      router.push("/page/dashboard");
-    } catch (error: any) {
-      setError(error.message || "Something went wrong");
+      const response = await UserLogin({ email, password });
+      setUserToken(response); // Directly set the response (token and account)
+      setError(null); // Clear error if login is successful
+      router.push("/page/adminPage"); // Navigate to the home page
+    } catch (error) {
+      console.error(error);
+      setError('Failed to login. Please check your credentials.');
     }
   };
 
@@ -47,10 +32,11 @@ export default function Login() {
         </h2>
         <div className="relative mb-4">
           <input
-            placeholder="Username"
-            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
             className="w-full p-3 pl-12 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none text-gray-800 placeholder-gray-500"
-            type="text"
+            type="email"
           />
           <svg
             className="absolute left-3 top-3 h-6 w-6 text-gray-400"
@@ -72,6 +58,7 @@ export default function Login() {
             placeholder="Password"
             type="password"
             onChange={(e) => setPassword(e.target.value)}
+            value={password}
             className="w-full p-3 pl-12 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none text-gray-800 placeholder-gray-500"
           />
           <svg
@@ -96,9 +83,19 @@ export default function Login() {
           Login
         </button>
         {error && <div className="mb-4 text-red-500 text-sm">{error}</div>}
-      </div>
-      <div>
-        <Link href={"/page/home"}>go to home</Link>
+        
+        {/* Conditionally display account information */}
+        {userToken && (
+          <div className="mt-4">
+            <p>Login successful!</p>
+            <p>Welcome, {userToken.account.owner_name}</p>
+            <p>Your token: {userToken.token}</p>
+          </div>
+        )}
+        
+        <div className="mt-4">
+          <Link href={"/page/home"}>Go to Home</Link>
+        </div>
       </div>
     </div>
   );
