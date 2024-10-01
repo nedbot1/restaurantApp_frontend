@@ -18,6 +18,11 @@ export default function LandingPage() {
           <h1 className="text-xl">Login</h1>
         </Link>
       </div>
+      <Link 
+        href={"/app/admin-dashboard"}
+        className="bg-gray-700 text-white font-semibold py-3 px-6 mt-6 rounded-lg shadow-lg hover:bg-gray-600 transition duration-300"
+      >
+        <h1 className="text-xl">Mock Login</h1></Link>
     </div>
   );
 }
