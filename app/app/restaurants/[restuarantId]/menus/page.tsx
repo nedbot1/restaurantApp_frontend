@@ -3,13 +3,10 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import React from "react";
-import Image from "next/image";
 import { fetchMenu, fetchTable } from "@/app/services/services";
 import type {
-  Restaurant,
-  Menu,
-  Table,
-  Session,
+  menu, 
+  session,
 } from "@/app/type/type";
 
 export default function Homepage() {
@@ -19,32 +16,27 @@ export default function Homepage() {
   const [dishes, setDishes] = useState<menu[]>([]);
   const [selectedTable, setSelectedTable] = useState<string | null>(null);
   const [cart, setCart] = useState<{
-    [key: string]: { dish: Menu; quantity: number; totalPrice: number };
+    [key: string]: { dish: menu; quantity: number; totalPrice: number };
   }>({});
-  const [sessionToken, setSessionToken] = useState<Session | null>(null);
+  const [sessionToken, setSessionToken] = useState<session | null>(null);
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [SessionEndTime, setSessionEndTime] = useState<Date | null>(null);
 
   useEffect(() => {
     if (table_id) {
       handleQrScan(table_id);
-       // Fetch menu based on table_id
-      fetchMenu();    }
+      }
   }, [table_id]);
 
-  
-  const loadMenu = async (restaurantId: string | number | null) => {     // Fetch menu data
+  // Fetch menu data
+  const loadMenu = async () => {
     try {
-      const data = await fetchMenu(restaurantId);
+      const data = await fetchMenu();
       setDishes(data.data);
-      console.log(data, "my menu data");
     } catch (error) {
       console.error("error fetching menu", error);
     }
-  };
-
-  // useEffect(() => {
-  // }, [sessionToken]);
+  }
 
   // Handle table selection and load the menu for that table
   const handleQrScan = (tableId: string) => {
@@ -72,7 +64,7 @@ export default function Homepage() {
   };
 
   // Add item to the cart or update quantity
-  const handleAddToCart = (dish: Menu) => {
+  const handleAddToCart = (dish: menu) => {
     setCart((prevCart) => {
       const existingItem = prevCart[dish.id];
       const updatedQuantity = existingItem ? existingItem.quantity + 1 : 1;
@@ -89,7 +81,7 @@ export default function Homepage() {
   };
 
   // Decrease item quantity in the cart
-  const handleRemoveFromCart = (dish: Menu) => {
+  const handleRemoveFromCart = (dish: menu) => {
     setCart((prevCart) => {
       const existingItem = prevCart[dish.id];
       if (!existingItem || existingItem.quantity <= 1) {
@@ -192,7 +184,7 @@ export default function Homepage() {
                   className="bg-white rounded-xl shadow-xl overflow-hidden transform transition-transform hover:scale-105 hover:shadow-2xl duration-300"
                   style={{ minWidth: "250px", minHeight: "300px" }}
                 >
-                  <Image
+                  <img
                     className="w-full h-56 object-cover"
                     src={dish.dish_photo_link}
                     alt={dish.item_name}
