@@ -2,6 +2,7 @@
 import { fetchTables, regenerateQrCode, createTable } from "@/app/services/services"
 import {useState, useEffect} from "react"
 import type { Table } from "@/app/type/type"
+import Navbar from "@/app/component/nav"
 
 export default function TablesPage( {params}: {params: {restaurantId: string}} ){
  const {restaurantId} = params
@@ -25,6 +26,7 @@ async function loadQrCodes() {
 
   return(
     <div>
+      <Navbar />
       <h1>Tables Page</h1>
       <div className="flex flex-wrap gap-2">
         {tables.map((table) => (

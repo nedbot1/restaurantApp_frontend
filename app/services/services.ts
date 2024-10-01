@@ -1,9 +1,35 @@
 
 import type { Restaurant, Menu, Table, Session, Order } from "../type/type";
 
+export async function addRestaurant(restaurantData: Partial<Restaurant>): Promise<{ data: Restaurant[] }>{
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/restaurants`, {
+      method: "POST",
+      headers: {
+        "ngrok-skip-browser-warning": "true",
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        restaurant: restaurantData
+      })
+    }
+  )
+  if (!response.ok) {
+    throw new Error('Failed to add restaurant');
+  }
+  return response.json();
+}
+
 export async function fetchRestaurant(): Promise<{ data: Restaurant[] }>{
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/restaurants`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/restaurants`, {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
     );
     if (!response.ok) {
     throw new Error('Failed to fetch restaurant');
@@ -12,7 +38,7 @@ export async function fetchRestaurant(): Promise<{ data: Restaurant[] }>{
 }
 
 export async function fetchMenu(
-  restaurantId: number
+  restaurantId: string
 ): Promise<{ data: Menu[] }>{
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/menus?restaurant_id=${restaurantId}`,

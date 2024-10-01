@@ -1,9 +1,9 @@
 export interface Restaurant {
-  id: number
+  id: string
   name: string
   location : string
   contact_number: string
-  account_id: number
+  account_id: string
 }
 
 export interface Menu {
