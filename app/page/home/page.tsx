@@ -6,10 +6,10 @@ import React from "react";
 import Image from "next/image";
 import { fetchMenu, fetchTable } from "@/app/services/services";
 import type {
-  restaurant,
-  menu,
-  table,
-  session,
+  Restaurant,
+  Menu,
+  Table,
+  Session,
 } from "@/app/type/type";
 
 export default function Homepage() {
@@ -19,9 +19,9 @@ export default function Homepage() {
   const [dishes, setDishes] = useState<menu[]>([]);
   const [selectedTable, setSelectedTable] = useState<string | null>(null);
   const [cart, setCart] = useState<{
-    [key: string]: { dish: menu; quantity: number; totalPrice: number };
+    [key: string]: { dish: Menu; quantity: number; totalPrice: number };
   }>({});
-  const [sessionToken, setSessionToken] = useState<session | null>(null);
+  const [sessionToken, setSessionToken] = useState<Session | null>(null);
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [SessionEndTime, setSessionEndTime] = useState<Date | null>(null);
 
@@ -32,10 +32,10 @@ export default function Homepage() {
       fetchMenu();    }
   }, [table_id]);
 
-  // Fetch menu data
-  const loadMenu = async () => {
+  
+  const loadMenu = async (restaurantId: string | number | null) => {     // Fetch menu data
     try {
-      const data = await fetchMenu();
+      const data = await fetchMenu(restaurantId);
       setDishes(data.data);
       console.log(data, "my menu data");
     } catch (error) {
@@ -72,7 +72,7 @@ export default function Homepage() {
   };
 
   // Add item to the cart or update quantity
-  const handleAddToCart = (dish: menu) => {
+  const handleAddToCart = (dish: Menu) => {
     setCart((prevCart) => {
       const existingItem = prevCart[dish.id];
       const updatedQuantity = existingItem ? existingItem.quantity + 1 : 1;
@@ -89,7 +89,7 @@ export default function Homepage() {
   };
 
   // Decrease item quantity in the cart
-  const handleRemoveFromCart = (dish: menu) => {
+  const handleRemoveFromCart = (dish: Menu) => {
     setCart((prevCart) => {
       const existingItem = prevCart[dish.id];
       if (!existingItem || existingItem.quantity <= 1) {

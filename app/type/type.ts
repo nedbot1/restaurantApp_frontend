@@ -1,4 +1,4 @@
-export interface restaurant {
+export interface Restaurant {
   id: number
   name: string
   location : string
@@ -6,25 +6,25 @@ export interface restaurant {
   account_id: number
 }
 
-export interface menu {
+export interface Menu {
   id:number
   price: number
   item_name: string
   item_description: string
   dish_photo_link : string
-  restaurant_id: number
+  restaurant_id: string
 
 }
 
-export interface table {
+export interface Table {
   id:string
   table_number: string
   qr_code : string
   status : string
-  restaurant_id: number
+  restaurant_id: string
 }
 
-export interface session {
+export interface Session {
   id: string
   session_token: string
   start_time: Date
