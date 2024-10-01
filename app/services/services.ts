@@ -30,7 +30,7 @@ export async function fetchMenu(
     return response.json()
 }
 
-export async function fetchTables(): Promise<{ data: table[] }> {
+export async function fetchTables(): Promise<{ data: Table[] }> {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/tables`,
       {
@@ -47,7 +47,7 @@ export async function fetchTables(): Promise<{ data: table[] }> {
 
   return response.json()
 }
-export async function createTable(tableArray : Array<Partial<table>>) : Promise <{ data: table }> {
+export async function createTable(tableArray : Array<Partial<Table>>) : Promise <{ data: Table }> {
     console.log(tableArray, "table array")
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/tables/batch`, {
@@ -65,7 +65,7 @@ export async function createTable(tableArray : Array<Partial<table>>) : Promise 
     return response.json()
   }
 
-export async function regenerateQrCode(tableId: string): Promise<{ data: table }> {
+export async function regenerateQrCode(tableId: string): Promise<{ data: Table }> {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/tables/${tableId}/regenerate_qr_code`,
       {

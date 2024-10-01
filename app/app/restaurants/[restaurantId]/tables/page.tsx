@@ -1,11 +1,11 @@
 "use client"
 import { fetchTables, regenerateQrCode, createTable } from "@/app/services/services"
 import {useState, useEffect} from "react"
-import type { table } from "@/app/type/type"
+import type { Table } from "@/app/type/type"
 
 export default function TablesPage( {params}: {params: {restaurantId: string}} ){
  const {restaurantId} = params
- const [tables, setTables] = useState<table[]>([])
+ const [tables, setTables] = useState<Table[]>([])
  const [addTableForm, setAddTableForm] = useState(false)
  const [tableNumber, setTableNumber] = useState("")
  const tableArray = [{"table_number": tableNumber, "restaurant_id": restaurantId}]
