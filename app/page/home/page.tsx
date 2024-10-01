@@ -3,39 +3,37 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import React from "react";
-import { fetchMenu, fetchTable } from "@/app/services/services";
+import { fetchMenu } from "@/app/services/services";
 import type {
-  restaurant,
-  menu,
-  table,
-  session,
+  Restaurant,
+  Menu,
+  Table,
+  Session,
 } from "@/app/type/type";
 
 export default function Homepage() {
   const searchParams = useSearchParams();
-  const table_id = searchParams.get("table_id"); // Get the table_id from query parameters
-
-  const [tables, setTables] = useState<table[]>([]);
-  const [dishes, setDishes] = useState<menu[]>([]);
+  const table_id = searchParams.get("table_id")
+  const restaurant_id = searchParams.get("restaurant_id"); // Get the table_id from query parameters
+  const [dishes, setDishes] = useState<Menu[]>([]);
   const [selectedTable, setSelectedTable] = useState<string | null>(null);
   const [cart, setCart] = useState<{
-    [key: string]: { dish: menu; quantity: number; totalPrice: number };
+    [key: string]: { dish: Menu; quantity: number; totalPrice: number };
   }>({});
-  const [sessionToken, setSessionToken] = useState<session | null>(null);
+  const [sessionToken, setSessionToken] = useState<Session | null>(null);
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [SessionEndTime, setSessionEndTime] = useState<Date | null>(null);
 
   useEffect(() => {
     if (table_id) {
-      handleTableClick(table_id); // Fetch menu based on table_id
-      fetchMenu();
+      handleTableScan(table_id); // Fetch menu based on restaurant_id
     }
   }, [table_id]);
 
   
-  const loadMenu = async () => {     // Fetch menu data
+  const loadMenu = async (restaurantId: string | number | null) => {     // Fetch menu data
     try {
-      const data = await fetchMenu();
+      const data = await fetchMenu(restaurantId);
       setDishes(data.data);
       console.log(data, "my menu data");
     } catch (error) {
@@ -45,11 +43,11 @@ export default function Homepage() {
 
   useEffect(() => {}, [sessionToken]);
 
-  
-  const handleTableClick = (table: string) => {   // Handle table selection and load the menu for that table
+
+  const handleTableScan = (table: string) => {   // Handle table selection and load the menu for that table
     setSelectedTable(table);
     startSession(table);
-    loadMenu();
+    loadMenu(restaurant_id);
   };
 
   const startSession = async (tableId: string) => {
@@ -71,7 +69,7 @@ export default function Homepage() {
   };
 
   // Add item to the cart or update quantity
-  const handleAddToCart = (dish: menu) => {
+  const handleAddToCart = (dish: Menu) => {
     setCart((prevCart) => {
       const existingItem = prevCart[dish.id];
       const updatedQuantity = existingItem ? existingItem.quantity + 1 : 1;
@@ -89,7 +87,7 @@ export default function Homepage() {
   };
 
   // Decrease item quantity in the cart
-  const handleRemoveFromCart = (dish: menu) => {
+  const handleRemoveFromCart = (dish: Menu) => {
     setCart((prevCart) => {
       const existingItem = prevCart[dish.id];
       if (!existingItem || existingItem.quantity <= 1) {

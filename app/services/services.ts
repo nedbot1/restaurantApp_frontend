@@ -1,7 +1,7 @@
 
-import type { restaurant, menu, table, session, Order } from "../type/type";
+import type { Restaurant, Menu, Table, Session, Order } from "../type/type";
 
-export async function fetchRestaurant(): Promise<{ data: restaurant[] }>{
+export async function fetchRestaurant(): Promise<{ data: Restaurant[] }>{
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/restaurants`
     );
@@ -11,9 +11,11 @@ export async function fetchRestaurant(): Promise<{ data: restaurant[] }>{
   return response.json();
 }
 
-export async function fetchMenu(): Promise<{ data: menu[] }>{
+export async function fetchMenu(
+  restaurantId: number
+): Promise<{ data: Menu[] }>{
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/menus`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/menus?restaurant_id=${restaurantId}`,
       {
         headers: {
           "ngrok-skip-browser-warning": "true",
@@ -28,7 +30,7 @@ export async function fetchMenu(): Promise<{ data: menu[] }>{
     return response.json()
 }
 
-export async function fetchTable(): Promise<{ data: table[] }> {
+export async function fetchTable(): Promise<{ data: Table[] }> {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/tables`,
       {
