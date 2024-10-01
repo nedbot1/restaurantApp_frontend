@@ -28,7 +28,7 @@ export async function fetchMenu(): Promise<{ data: menu[] }>{
     return response.json()
 }
 
-export async function fetchTable(): Promise<{ data: table[] }> {
+export async function fetchTables(): Promise<{ data: table[] }> {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/tables`,
       {
@@ -42,9 +42,8 @@ export async function fetchTable(): Promise<{ data: table[] }> {
     if (!response.ok) {
       throw new Error('failed to fetch tables')
     }
-  
-  return response.json()
 
+  return response.json()
   // try {
   //   const response = await fetch(
   //     `https://93c4-119-2-104-121.ngrok-free.app/api/tables`
@@ -64,6 +63,24 @@ export async function fetchTable(): Promise<{ data: table[] }> {
   // }
 }
 
+
+export async function regenerateQrCode(tableId: string): Promise<{ data: table }> {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/tables/${tableId}/regenerate_qr_code`,
+      {
+        method: "POST",
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error('failed to fetch tables')
+    }
+    return response.json()
+  }
 
 export async function fetchOrder(): Promise<{ data: Order[] }>{
     const response = await fetch(
