@@ -21,7 +21,7 @@ export interface table {
   table_number: string
   qr_code : string
   status : string
-  restaurant_id: number
+  restaurant_id: string
 }
 
 export interface session {

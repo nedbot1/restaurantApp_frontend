@@ -44,25 +44,24 @@ export async function fetchTables(): Promise<{ data: table[] }> {
     }
 
   return response.json()
-  // try {
-  //   const response = await fetch(
-  //     `https://93c4-119-2-104-121.ngrok-free.app/api/tables`
-  //   );
-  //   if (!response.ok) {
-  //     throw new Error(`HTTP error! Status: ${response.status}`);
-  //   }
-  //   const contentType = response.headers.get("Content-Type");
-  //   if (contentType && contentType.includes("text/html")) {
-  //     const text = await response.text();
-  //     throw new Error(`Unexpected HTML response: ${text}`);
-  //   }
-  //   const data = await response.json();
-  //   console.log("Table data:", data);
-  // } catch (error) {
-  //   console.error("Error fetching tables:", error);
-  // }
 }
-
+export async function createTable(tableArray : Array<Partial<table>>) : Promise <{ data: table }> {
+    console.log(tableArray, "table array")
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/tables/batch`, {
+        method: "POST",
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          tables: tableArray
+        })
+      }
+    )
+    return response.json()
+  }
 
 export async function regenerateQrCode(tableId: string): Promise<{ data: table }> {
     const response = await fetch(
