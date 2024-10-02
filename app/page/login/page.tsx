@@ -83,7 +83,14 @@ export default function LoginPage() {
           Login
         </button>
         {error && <div className="mb-4 text-red-500 text-sm">{error}</div>}
-        
+        <button className="mt-4">
+          <Link
+            href="http://localhost:3000"
+            className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 px-4 rounded-lg shadow-md transition duration-200 ease-in-out transform hover:scale-105"
+          >
+            Go Back
+          </Link>
+        </button>
         {/* Conditionally display account information */}
         {userToken && (
           <div className="mt-4">
@@ -92,7 +99,6 @@ export default function LoginPage() {
             <p>Your token: {userToken.token}</p>
           </div>
         )}
-        
         <div className="mt-4">
           <Link href={"/page/home"}>Go to Home</Link>
         </div>
