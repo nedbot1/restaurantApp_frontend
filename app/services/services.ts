@@ -35,7 +35,7 @@ export async function fetchRestaurant(): Promise<{ data: Restaurant[] }>{
     throw new Error('Failed to fetch restaurant');
   }
   return response.json();
-}
+}               
 
 export async function fetchMenu(
   restaurantId: string
