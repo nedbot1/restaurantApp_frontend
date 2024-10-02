@@ -19,7 +19,7 @@ export default function Homepage() {
   const [dishes, setDishes] = useState<Menu[]>([]);
   const [selectedTable, setSelectedTable] = useState<string | null>(null);
   const [cart, setCart] = useState<{
-    [key: string]: { dish: Menu; quantity: number; totalPrice: number };
+    [key: string]: { dish: Menu; quantity: number; totalPrice: number; restaurant_id:string};
   }>({});
   const [sessionToken, setSessionToken] = useState<Session | null>(null);
   const [totalAmount, setTotalAmount] = useState<number>(0);
@@ -138,6 +138,7 @@ export default function Homepage() {
     const orderToSubmit = {
       session_id: sessionToken.id,
       total_amount: totalAmount,
+      restaurant_id: cart.restaurant_id,
       order_lists: Object.values(cart).map((item) => ({
         menu_item_id: item.dish.id,
         quantity: item.quantity,
