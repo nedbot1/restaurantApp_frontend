@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import Image from "next/image";
-import { fetchMenu, fetchTable } from "@/app/services/services";
+import { fetchMenu, } from "@/app/services/services";
 import type {
   Restaurant,
   Menu,
@@ -15,8 +15,8 @@ import type {
 export default function Homepage() {
   const searchParams = useSearchParams();
   const table_id = searchParams.get("table_id");
-
-  const [dishes, setDishes] = useState<menu[]>([]);
+  const restaurant_id = searchParams.get("restaurant_id")
+  const [dishes, setDishes] = useState<Menu[]>([]);
   const [selectedTable, setSelectedTable] = useState<string | null>(null);
   const [cart, setCart] = useState<{
     [key: string]: { dish: Menu; quantity: number; totalPrice: number };
@@ -29,11 +29,11 @@ export default function Homepage() {
     if (table_id) {
       handleQrScan(table_id);
        // Fetch menu based on table_id
-      fetchMenu();    }
+      fetchMenu(restaurant_id);    }
   }, [table_id]);
 
   
-  const loadMenu = async (restaurantId: string | number | null) => {     // Fetch menu data
+  const loadMenu = async (restaurantId: string) => {     // Fetch menu data
     try {
       const data = await fetchMenu(restaurantId);
       setDishes(data.data);
@@ -50,7 +50,7 @@ export default function Homepage() {
   const handleQrScan = (tableId: string) => {
     setSelectedTable(tableId);
     startSession(tableId)
-    loadMenu();
+    loadMenu(restaurant_id);
   };
 
   const startSession = async (tableId: string) => {
