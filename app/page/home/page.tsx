@@ -26,7 +26,7 @@ export default function Homepage() {
   const [SessionEndTime, setSessionEndTime] = useState<Date | null>(null);
 
   useEffect(() => {
-    if (table_id) {
+    if (table_id && restaurant_id) {
       handleQrScan(table_id);
        // Fetch menu based on table_id
       fetchMenu(restaurant_id);    }
@@ -39,18 +39,19 @@ export default function Homepage() {
       setDishes(data.data);
       console.log(data, "my menu data");
     } catch (error) {
-      console.error("error fetching menu", error);
+      console.error("Error fetching menu", error);
     }
   };
 
-  // useEffect(() => {
-  // }, [sessionToken]);
-
-  // Handle table selection and load the menu for that table
   const handleQrScan = (tableId: string) => {
     setSelectedTable(tableId);
-    startSession(tableId)
-    loadMenu(restaurant_id);
+    startSession(tableId);
+
+    if (restaurant_id) {
+      loadMenu(restaurant_id);
+    } else {
+      console.error("Restaurant ID is not defined");
+    }
   };
 
   const startSession = async (tableId: string) => {
@@ -65,13 +66,12 @@ export default function Homepage() {
       );
       const { data } = await response.json();
       setSessionToken(data);
-      setSessionEndTime(new Date(data.end_time)); // Save session token to track the session
+      setSessionEndTime(new Date(data.end_time));
     } catch (error) {
       console.error("Error starting session:", error);
     }
   };
 
-  // Add item to the cart or update quantity
   const handleAddToCart = (dish: Menu) => {
     setCart((prevCart) => {
       const existingItem = prevCart[dish.id];
@@ -88,7 +88,6 @@ export default function Homepage() {
     });
   };
 
-  // Decrease item quantity in the cart
   const handleRemoveFromCart = (dish: Menu) => {
     setCart((prevCart) => {
       const existingItem = prevCart[dish.id];
@@ -111,7 +110,6 @@ export default function Homepage() {
     });
   };
 
-  // Calculate total amount when cart is updated
   useEffect(() => {
     const newTotalAmount = Object.values(cart).reduce(
       (total, item) => total + item.totalPrice,
@@ -137,9 +135,8 @@ export default function Homepage() {
       return;
     }
 
-    // Construct the order dynamically here
     const orderToSubmit = {
-      session_id: sessionToken.id, // Use the session token from the backend
+      session_id: sessionToken.id,
       total_amount: totalAmount,
       order_lists: Object.values(cart).map((item) => ({
         menu_item_id: item.dish.id,
@@ -156,7 +153,7 @@ export default function Homepage() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ order: orderToSubmit }), // Send the constructed order
+          body: JSON.stringify({ order: orderToSubmit }),
         }
       );
 
@@ -164,12 +161,11 @@ export default function Homepage() {
 
       if (response.ok) {
         alert("Order placed successfully!");
-        // Optionally reset cart or navigate to another page
         setCart({});
         setTotalAmount(0);
       } else {
         console.error("Error placing order:", response.statusText);
-        alert("error placing order.");
+        alert("Error placing order.");
       }
     } catch (error) {
       console.error("Error placing order:", error);
@@ -180,7 +176,7 @@ export default function Homepage() {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       {selectedTable && (
-        <div className="">
+        <div>
           <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">
             Menu for Table
           </h2>
@@ -263,7 +259,7 @@ export default function Homepage() {
             </div>
             <button
               onClick={handleSubmitOrder}
-              className="bg-blue-600 text-white py-3 px-6 rounded-xl mt-4 hover:bg-blue-700 transition-colors"
+              className="mt-6 bg-blue-500 text-white p-3 rounded-full hover:bg-blue-600 transition-colors"
             >
               Place Order
             </button>
