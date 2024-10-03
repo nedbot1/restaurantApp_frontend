@@ -3,18 +3,20 @@ import type { Restaurant, Menu, Table, Session, Order } from "../type/type";
 
 export async function addRestaurant(restaurantData: Partial<Restaurant>): Promise<{ data: Restaurant[] }>{
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/restaurants`, {
+    `${process.env.NEXT_PUBLIC_API_URL}/api/restaurants`,
+    {
       method: "POST",
       headers: {
         "ngrok-skip-browser-warning": "true",
         "Content-Type": "application/json",
         Accept: "application/json",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
       },
       body: JSON.stringify({
-        restaurant: restaurantData
-      })
+        restaurant: restaurantData,
+      }),
     }
-  )
+  );
   if (!response.ok) {
     throw new Error('Failed to add restaurant');
   }
@@ -23,11 +25,13 @@ export async function addRestaurant(restaurantData: Partial<Restaurant>): Promis
 
 export async function fetchRestaurant(): Promise<{ data: Restaurant[] }>{
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/restaurants`, {
+      `${process.env.NEXT_PUBLIC_API_URL}/api/restaurants`,
+      {
         headers: {
           "ngrok-skip-browser-warning": "true",
           "Content-Type": "application/json",
           Accept: "application/json",
+          // "Cache-Control": "no-store",
         },
       }
     );
@@ -56,9 +60,9 @@ export async function fetchMenu(
     return response.json()
 }
 
-export async function fetchTables(): Promise<{ data: Table[] }> {
+export async function fetchTables(restaurantId: string): Promise<{ data: Table[] }> {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/tables`,
+      `${process.env.NEXT_PUBLIC_API_URL}//api/tables/by_restaurant/${restaurantId}`,
       {
         headers: {
           "ngrok-skip-browser-warning": "true",
@@ -99,6 +103,7 @@ export async function regenerateQrCode(tableId: string): Promise<{ data: Table }
         headers: {
           "ngrok-skip-browser-warning": "true",
           "Content-Type": "application/json",
+          
           Accept: "application/json",
         },
       }
@@ -116,6 +121,7 @@ export async function fetchOrder(): Promise<{ data: Order[] }>{
         headers: {
           "ngrok-skip-browser-warning": "true",
           "Content-Type": "application/json",
+         
           Accept: "application/json",
         },
       }
@@ -132,6 +138,7 @@ export async function fetchUnpaidOrder(): Promise<{ data: Order[] }>{
       headers: {
         "ngrok-skip-browser-warning": "true",
         "Content-Type": "application/json",
+      
         Accept: "application/json",
       },
     }

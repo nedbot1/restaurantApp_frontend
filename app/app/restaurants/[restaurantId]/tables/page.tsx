@@ -17,7 +17,7 @@ async function handleAddTable() {
     setAddTableForm(false)
 }
 async function loadQrCodes() {
-   const tables = await fetchTables()
+   const tables = await fetchTables(restaurantId)
    setTables(tables.data)
 }
  useEffect(() => {
