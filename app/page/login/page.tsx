@@ -1,6 +1,6 @@
 "use client";
-import { UserLogin } from "@/app/services/login";
-import { useState } from "react";
+import { UserLogin} from "@/app/services/login";
+import { useState} from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { LoginResponse} from "@/app/type/login";
@@ -8,16 +8,18 @@ import type { LoginResponse} from "@/app/type/login";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userToken, setUserToken] = useState<LoginResponse | null>(null); // Hold token and account data
+  const [userToken, setUserToken] = useState<LoginResponse | null>(null); 
   const [error, setError] = useState<string | null>(null);
   const router = useRouter()
 
   const handleLogin = async () => {
     try {
       const response = await UserLogin({ email, password });
-      setUserToken(response); // Directly set the response (token and account)
-      setError(null); // Clear error if login is successful
-      router.push("/page/adminPage"); // Navigate to the home page
+      const accountId = response.account.id
+      localStorage.setItem('accountID', accountId);
+      setUserToken(response); 
+      setError(null); 
+      router.push("/page/owner");
     } catch (error) {
       console.error(error);
       setError('Failed to login. Please check your credentials.');
