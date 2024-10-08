@@ -21,7 +21,7 @@ export async function fetchRestaurant(accountId:string): Promise<{ data:Restaura
     return response.json();
   }
 
-  export async function createRestaurant(restaurant:Restaurant): Promise<{ data:Restaurant}> {
+  export async function createRestaurant(restaurant: Partial<Restaurant>): Promise<{ data:Restaurant}> {
     const response = await fetch(`http://localhost:4000/api/restaurants`,{
       method: 'POST',
       headers: {

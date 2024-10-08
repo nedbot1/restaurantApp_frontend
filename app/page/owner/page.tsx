@@ -50,7 +50,7 @@ const OwnerPage: React.FC = () => {
   };
 
   const handleCreateRestaurant = async (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent page refresh on form submission
+    e.preventDefault(); 
     const accountID = localStorage.getItem('accountID');
     if (accountID) {
       try {
@@ -61,7 +61,7 @@ const OwnerPage: React.FC = () => {
           contact_number: restaurantContactNumber, 
           account_id: accountID,
         });
-        setRestaurant(newRestaurant); // After creation, set the newly created restaurant
+        setRestaurant(newRestaurant); 
       } catch (error) {
         console.log("Failed to create restaurant", error);
       } finally {
