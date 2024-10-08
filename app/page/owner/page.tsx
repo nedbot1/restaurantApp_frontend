@@ -4,6 +4,7 @@ import { fetchOrder } from "@/app/services/owner"
 import { Order } from "@/app/type/type"
 import { fetchRestaurant } from "@/app/services/owner"
 import { Restaurant } from "@/app/type/type"
+import Navbar from "@/app/component/nav"
 
 const OwnerPage: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([])
@@ -40,7 +41,8 @@ const OwnerPage: React.FC = () => {
       }, [restaurant]);
 
     return (
-        <div className="p-6">
+      <div className="p-6">
+        <Navbar/>
           <h2 className="text-2xl font-bold mb-6 text-center">Orders</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {orders.map((order) => (
