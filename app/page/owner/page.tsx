@@ -1,12 +1,17 @@
 "use client"
 import { useEffect, useState } from "react"
-import { fetchOrder, fetchRestaurant } from "@/app/services/owner"
+import { fetchOrder, fetchRestaurant, createRestaurant } from "@/app/services/owner"
 import { Order, Restaurant } from "@/app/type/type"
 
 const OwnerPage: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([])
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null)
   const [isFetchingOrders, setIsFetchingOrders] = useState(false)
+  const [isPremium, setIsPremium] = useState(false); // To track if the account is premium
+  const [isCreatingRestaurant, setIsCreatingRestaurant] = useState(false);
+  const [restaurantName, setRestaurantName] = useState("");
+  const [restaurantLocation, setRestaurantLocation] = useState("");
+  const [restaurantContactNumber, setRestaurantContactNumber] = useState("");
 
   useEffect(() => {
     const accountID = localStorage.getItem('accountID');
@@ -14,7 +19,13 @@ const OwnerPage: React.FC = () => {
       const loadRestaurant = async () => {
         try {
           const response = await fetchRestaurant(accountID);
-          setRestaurant(response); 
+          if (response) {
+            setRestaurant(response);
+          } else {
+            setRestaurant(null); // No restaurant exists
+          }
+          // Set isPremium to true or false based on account info (e.g., fetched from response)
+          // setIsPremium(response.isPremium); // Uncomment and modify this based on API response
         } catch (error) {
           console.log("Failed to fetch restaurant data", error);
         }
@@ -38,13 +49,36 @@ const OwnerPage: React.FC = () => {
     }
   };
 
+  const handleCreateRestaurant = async (e: React.FormEvent) => {
+    e.preventDefault(); 
+    const accountID = localStorage.getItem('accountID');
+    if (accountID) {
+      try {
+        setIsCreatingRestaurant(true);
+        const newRestaurant = await createRestaurant({
+          name: restaurantName,
+          location: restaurantLocation,
+          contact_number: restaurantContactNumber, 
+          account_id: accountID,
+        });
+        setRestaurant(newRestaurant); 
+      } catch (error) {
+        console.log("Failed to create restaurant", error);
+      } finally {
+        setIsCreatingRestaurant(false);
+      }
+    }
+  };
+
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-6 text-center">Restaurant Information</h2>
+
       {restaurant ? (
         <div className="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
           <p className="text-xl font-semibold text-gray-700">Name: {restaurant.name}</p>
           <p className="text-sm text-gray-500">Location: {restaurant.location}</p>
+          <p className="text-sm text-gray-500">Contact Number: {restaurant.contact_number}</p>
 
           {/* Fetch Orders Button */}
           <button
@@ -56,9 +90,59 @@ const OwnerPage: React.FC = () => {
           </button>
         </div>
       ) : (
-        <p>Loading restaurant details...</p>
+        <div>
+          <p>No restaurant found. You can create one:</p>
+
+          {/* Form to create a restaurant */}
+          <form onSubmit={handleCreateRestaurant} className="mt-4">
+            <div className="mb-4">
+              <label className="block text-gray-700 font-bold mb-2">Restaurant Name</label>
+              <input
+                type="text"
+                placeholder="Restaurant Name"
+                value={restaurantName}
+                onChange={(e) => setRestaurantName(e.target.value)}
+                className="border p-2 rounded w-full"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700 font-bold mb-2">Location</label>
+              <input
+                type="text"
+                placeholder="Restaurant Location"
+                value={restaurantLocation}
+                onChange={(e) => setRestaurantLocation(e.target.value)}
+                className="border p-2 rounded w-full"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700 font-bold mb-2">Contact Number</label>
+              <input
+                type="text"
+                placeholder="Contact Number"
+                value={restaurantContactNumber}
+                onChange={(e) => setRestaurantContactNumber(e.target.value)}
+                className="border p-2 rounded w-full"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              disabled={isCreatingRestaurant}
+            >
+              {isCreatingRestaurant ? "Creating Restaurant..." : "Create Restaurant"}
+            </button>
+          </form>
+        </div>
       )}
 
+      {/* Display orders if there are any */}
       {orders.length > 0 && (
         <div className="mt-8">
           <h2 className="text-2xl font-bold mb-6 text-center">Orders</h2>
