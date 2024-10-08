@@ -4,6 +4,5 @@ export interface Restaurant {
   location: string;
   contact_number: string;
   account_id: string;
-  inserted_at: string;
-  updated_at: string;
+  
 }
