@@ -83,7 +83,7 @@ const OwnerPage: React.FC = () => {
 
   return (
     <div className="">
-      <div className=" bg-[#D9D9D9]/35 rounded-3xl flex flex-col justify-center px-14 gap-14 m-14 h-screen">
+      <div className=" bg-[#D9D9D9]/35 rounded-3xl flex flex-col justify-center h-[47rem] px-14 gap-14 m-14">
         {restaurant ? (
           <div>
             <h2 className="text-2xl font-bold mb-6 text-center">

@@ -60,7 +60,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex bg-[#D9D9D9]/35 rounded-3xl items-center px-14 gap-14 m-14">
+    <div className="">
+    <div className="flex bg-[#D9D9D9]/35 rounded-3xl items-center px-14 h-[47rem] m-14 gap-14 ">
       <div className="absolute top-7 left-14">
         <img src="/logo.png" alt="Logo" />
       </div>
@@ -160,6 +161,7 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }
