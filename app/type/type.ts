@@ -7,13 +7,14 @@ export interface Restaurant {
 }
 
 export interface Menu {
-  id:number
+  id:string
   price: number
   item_name: string
   item_description: string
   dish_photo_link : string
   restaurant_id: string
-
+  category_name: string
+  menus: Menu[]
 }
 
 export interface Table {
@@ -39,4 +40,9 @@ export interface Order {
   session_id: string,
   order_lists: any,
   table_number:string
+}
+
+export interface Category{
+  id: string
+  name: string
 }

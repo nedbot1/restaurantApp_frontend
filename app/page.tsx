@@ -1,35 +1,3 @@
-// import Link from "next/link";
-
-// export default function LandingPage() {
-//   return (
-//     <div className="flex flex-col items-center justify-center min-h-screen bg-[#D9D9D9]/30">
-//       <div className="bg-white rounded-lg border-2 border-black flex flex-col justify-center items-center">
-//       <h1 className="text-4xl font-semibold text-gray-800 mb-6 mt-2">LOGIN</h1>
-//       <div className="flex flex-col gap-4">
-//         <Link
-//           href={"/page/signUp"}
-//           className="bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-600 transition duration-300"
-//         >
-//           <h1 className="text-xl">Sign Up If You Are New</h1>
-//         </Link>
-//         <Link
-//           href={"/page/login"}
-//           className="bg-green-500 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-green-600 transition duration-300"
-//         >
-//           <h1 className="text-xl">Login</h1>
-//         </Link>
-//       </div>
-//       <Link
-//         href={"/app/admin-dashboard"}
-//         className="bg-gray-700 text-white font-semibold py-3 px-6 mt-6 rounded-lg shadow-lg hover:bg-gray-600 transition duration-300"
-//       >
-//         <h1 className="text-xl">Mock Login</h1>
-//       </Link>
-
-//       </div>
-//     </div>
-//   );
-// }
 
 "use client";
 import { UserLogin } from "@/app/services/login";
