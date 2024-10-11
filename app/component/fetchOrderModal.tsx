@@ -6,12 +6,12 @@ import Modal from "@/app/component/modal";// Importing the Modal
 import Button from "@/app/component/button";
 import type { Order } from "@/app/type/type";
 
- export default function FetchOrderModal(restaurantId) {
+ export default function FetchOrderModal(restaurantId:string) {
    const [orders, setOrders] = useState<Order[]>([]);
    const [isModalOpen, setIsModalOpen] = useState(false); // For modal state
    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null); // For the selected order in modal
 
-   const loadOrders = async (restaurantId) => {
+   const loadOrders = async (restaurantId:string) => {
      try {
        const { data } = await fetchOrder(restaurantId);
        setOrders(data);
@@ -45,7 +45,7 @@ import type { Order } from "@/app/type/type";
    }, []);
 
    return (
-     <div className="min-h-screen bg-gray-100 p-6">
+     <div className=" bg-gray-100 p-6">
        <h1 className="text-2xl font-semibold text-gray-700">Order</h1>
        <div className="grid gap-6">
          {orders.map(
