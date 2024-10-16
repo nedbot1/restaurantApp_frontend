@@ -22,11 +22,13 @@ const OwnerPage: React.FC = () => {
   // Load restaurant data on component mount
   const loadRestaurant = async () => {
     const accountID = localStorage.getItem("accountID");
+    console.log("acc id", accountID);
     if (accountID) {
       try {
-        const response = await fetchRestaurant(accountID);
+        const response  = await fetchRestaurant(accountID);
         if (response) {
           setRestaurant(response);
+          console.log(response,"my res")
         } else {
           setRestaurant(null); // No restaurant exists
         }
@@ -41,21 +43,6 @@ const OwnerPage: React.FC = () => {
     loadRestaurant();
   }, []);
 
-  // Handle fetching orders
-  const handleFetchOrders = async () => {
-    if (restaurant) {
-      setIsFetchingOrders(true);
-      try {
-        const { data } = await fetchOrder(restaurant.id);
-        console.log(data, "ordered data");
-        setOrders(data);
-      } catch (error) {
-        console.log("Failed to fetch orders", error);
-      } finally {
-        setIsFetchingOrders(false);
-      }
-    }
-  };
 
   // Handle restaurant creation
   const handleCreateRestaurant = async (e: React.FormEvent) => {
@@ -70,7 +57,7 @@ const OwnerPage: React.FC = () => {
           contact_number: restaurantContactNumber,
           account_id: accountID,
         });
-        setRestaurant(newRestaurant);
+        setRestaurant(newRestaurant.data);
         // Call loadRestaurant to refresh the restaurant data after creation
         await loadRestaurant();
       } catch (error) {
@@ -84,44 +71,34 @@ const OwnerPage: React.FC = () => {
   return (
     <div className="">
       <div className=" bg-[#D9D9D9]/35 rounded-3xl flex flex-col justify-center h-[47rem] px-14 gap-14 m-14">
-        {restaurant ? (
+        {restaurant && restaurant?.length > 0 ? (
           <div>
             <h2 className="text-2xl font-bold mb-6 text-center">
-              Restaurant Information
+              Restaurants Information
             </h2>
-            <Link
-              href={`/page/owner/${restaurant.id}`}
-              className="bg-white shadow-lg rounded-lg p-6 border border-gray-200 flex"
-            >
-              <div className="flex flex-col">
-                <p className="text-xl font-semibold text-gray-700">
-                  Name: {restaurant.name}
-                </p>
-                <p className="text-sm text-gray-500">
-                  Location: {restaurant.location}
-                </p>
-                <p className="text-sm text-gray-500">
-                  Contact Number: {restaurant.contact_number}
-                </p>
-              </div>
-
-              {/* Fetch Orders Button */}
-              {/* <button
-            onClick={handleFetchOrders}
-            className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            disabled={isFetchingOrders}
-          >
-            {isFetchingOrders ? "Fetching Orders..." : "Fetch Orders"}
-          </button> */}
-            </Link>
+            {restaurant?.map((rest) => (
+              <Link
+                key={rest.id}
+                href={`/page/owner/${rest.id}`}
+                className="bg-white shadow-lg rounded-lg p-6 border border-gray-200 flex mb-4"
+              >
+                <div className="flex flex-col">
+                  <p className="text-xl font-semibold text-gray-700">
+                    Name: {rest.name}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Location: {rest.location}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Contact Number: {rest.contact_number}
+                  </p>
+                </div>
+              </Link>
+            ))}
           </div>
         ) : (
           <div className="flex items-center gap-9">
-            <img
-              className=" h-16 mb-4"
-              src="/logo.png"
-              alt="Logo"
-            />
+            <img className=" h-16 mb-4" src="/logo.png" alt="Logo" />
             {/* Form to create a restaurant */}
             <form
               onSubmit={handleCreateRestaurant}
@@ -173,48 +150,6 @@ const OwnerPage: React.FC = () => {
             </form>
           </div>
         )}
-
-        {/* Display orders if there are any */}
-        {/* {orders.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-6 text-center">Orders</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {orders.map((order) => (
-              <div
-                key={order.id}
-                className="bg-white shadow-lg rounded-lg p-4 border border-gray-200 hover:shadow-xl transition-shadow duration-300"
-              >
-                <div className="mb-4">
-                  <p className="text-xl font-semibold text-gray-700">
-                    Total Amount: ${order.total_amount}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Table Number: {order.table_number}
-                  </p>
-                </div>
-                <div className="bg-gray-100 p-3 rounded-lg">
-                  {order.order_lists.map((item, index) => (
-                    <div key={index} className="mb-4">
-                      <p className="text-lg font-medium text-gray-800">
-                        {item.item_name}
-                      </p>
-                      <p className="text-sm text-gray-600 mb-2">
-                        {item.description}
-                      </p>
-                      <p className="text-lg font-semibold text-green-600">
-                        Nu.{item.total_price}
-                      </p>
-                      <p className="text-lg font-semibold text-green-600">
-                        Quantity: {item.quantity}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )} */}
       </div>
     </div>
   );

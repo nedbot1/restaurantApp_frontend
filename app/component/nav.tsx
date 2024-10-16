@@ -8,6 +8,7 @@ import { useState } from "react";
 
 export default function Navbar() {
   const { id } = useParams();
+  console.log(id,"nav id")
   const [modalType, setModalType] = useState("fetchOrders"); // Default modal is "fetchOrders"
 
   const handleModalOpen = (type: string) => {
@@ -53,7 +54,7 @@ export default function Navbar() {
 
       {/* Modal Area */}
       {modalType && (
-        <div className="fixed top-32 m-10 rounded-lg left-0 right-0 bottom-0 bg- bg-[#D9D9D9]/35 bg-opacity-90 z-50 flex">
+        <div className="p-4 top-32 m-10 rounded-lg left-0 right-0 bottom-0 bg-[#D9D9D9]/35 bg-opacity-90 z-50 flex">
           {modalType === "fetchOrders" && (
             <FetchOrderModal onClose={handleModalClose} restaurantId={id} />
           )}

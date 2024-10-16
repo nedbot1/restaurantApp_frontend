@@ -23,9 +23,9 @@ export async function addRestaurant(restaurantData: Partial<Restaurant>): Promis
   return response.json();
 }
 
-export async function fetchRestaurant(): Promise<{ data: Restaurant[] }>{
+export async function fetchRestaurant(accountId: string): Promise<{ data: Restaurant[] }>{
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/restaurants`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/restaurants/account/${accountId}`,
       {
         headers: {
           "ngrok-skip-browser-warning": "true",
