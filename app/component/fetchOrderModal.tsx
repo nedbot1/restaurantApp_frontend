@@ -6,16 +6,15 @@ import Modal from "@/app/component/modal";// Importing the Modal
 import Button from "@/app/component/button";
 import type { Order } from "@/app/type/type";
 
- export default function FetchOrderModal(restaurantId:string) {
+export default function FetchOrderModal({ restaurantId }:{restaurantId:string}) {
    const [orders, setOrders] = useState<Order[]>([]);
    const [isModalOpen, setIsModalOpen] = useState(false); // For modal state
    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null); // For the selected order in modal
 
-   const loadOrders = async (restaurantId:string) => {
+   const loadOrders = async (restaurantId: any) => {
      try {
        const { data } = await fetchOrder(restaurantId);
        setOrders(data);
-       console.log(data)
      } catch (error) {
        console.error("Error fetching orders", error);
      }
@@ -45,16 +44,38 @@ import type { Order } from "@/app/type/type";
    }, []);
 
    return (
-     <div className=" bg-gray-100 p-6">
-       <h1 className="text-2xl font-semibold text-gray-700">Order</h1>
+     <div className=" p-6 w-screen">
+       <h1 className="text-2xl font-semibold text-gray-700">Orders</h1>
        <div className="grid gap-6">
          {orders.map(
            (order) =>
              !order.payed_at && (
                <div
                  key={order.id}
-                 className="bg-white rounded-lg shadow p-6 border border-gray-200 flex"
+                 className=" h-fit overflow-y-auto rounded-lg shadow p-6 border border-gray-200 flex space-x-2"
                >
+                 <div className="flex-1">
+                   <h3 className="text-gray-700 text-lg font-semibold mb-2">
+                     Order List:
+                   </h3>
+                   {order.order_lists.map((list: any) => (
+                     <div
+                       key={list.id}
+                       className="bg-gray-50 p-4 mb-4 rounded-lg border border-gray-200"
+                     >
+                       <p className="text-gray-600">
+                         Quantity: {list.quantity}
+                       </p>
+                       <p className="text-gray-600">
+                         Total Price: Nu {list.total_price} /-
+                       </p>
+                       <p className="text-gray-600">
+                         Item name: {list.item_name}
+                       </p>
+                     </div>
+                   ))}
+                 </div>
+
                  {/* Order Details */}
                  <div className="flex-1 border-2 mr-2 rounded-lg p-10 text">
                    <div className="text-gray-500 text-sm mb-2">
@@ -87,29 +108,6 @@ import type { Order } from "@/app/type/type";
                    >
                      Take Action
                    </button>
-                 </div>
-
-                 {/* Order List */}
-                 <div className="flex-1">
-                   <h3 className="text-gray-700 text-lg font-semibold mb-2">
-                     Order List:
-                   </h3>
-                   {order.order_lists.map((list: any) => (
-                     <div
-                       key={list.id}
-                       className="bg-gray-50 p-4 mb-4 rounded-lg border border-gray-200"
-                     >
-                       <p className="text-gray-600">
-                         Quantity: {list.quantity}
-                       </p>
-                       <p className="text-gray-600">
-                         Total Price: Nu {list.total_price} /-
-                       </p>
-                       <p className="text-gray-600">
-                         Item name: {list.item_name}
-                       </p>
-                     </div>
-                   ))}
                  </div>
                </div>
              )

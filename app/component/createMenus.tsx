@@ -24,14 +24,13 @@ export default function CreateMenuModal({
   const [addMenuForm, setAddMenuForm] = useState(false); // State to control form visibility
   const { id } = useParams() as {id:string};
 
-  // Load the menus and categories when the component mounts
   async function loadMenu() {
     const menus = await fetchMenu(id);
     setMenus(menus.data);
   }
 
   async function loadCategories() {
-    const categories = await fetchCategory(); // Assuming fetchCategory fetches categories
+    const categories = await fetchCategory();
     setCategories(categories.data);
   }
 
