@@ -9,16 +9,19 @@ import type { LoginResponse } from "@/app/type/login";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userToken, setUserToken] = useState<LoginResponse | null>(null);
+  // const [userToken, setUserToken] = useState<LoginResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const handleLogin = async () => {
     try {
       const response = await UserLogin({ email, password });
-      const accountId = response.account.id;
+      console.log("my res", response)
+      const accountId = response.id;
       localStorage.setItem("accountID", accountId);
-      setUserToken(response);
+      const accessToken = response.token;
+      localStorage.setItem("accessToken", accessToken);
+      // setUserToken(response);
       setError(null);
       router.push("/page/owner");
     } catch (error) {
@@ -108,7 +111,7 @@ export default function LoginPage() {
           {error && <div className="mb-4 text-red-500 text-sm">{error}</div>}
 
           {/* Success Message */}
-          {userToken && (
+          {/* {userToken && (
             <div className="mt-4 text-center">
               <p className="text-lg font-medium text-green-600">
                 Login successful!
@@ -116,7 +119,7 @@ export default function LoginPage() {
               <p>Welcome, {userToken.account.owner_name}</p>
               <p>Your token: {userToken.token}</p>
             </div>
-          )}
+          )} */}
 
           {/* Create an Account Link */}
           <div className="mt-6">

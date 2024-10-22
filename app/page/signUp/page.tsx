@@ -5,10 +5,9 @@ import Link from "next/link";
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
-    owner_name: '',
+    full_name: '',
     email: '',
-    password: '',
-    phone_number: ''
+    hash_password: '',
   });
   const [isSignedUp, setIsSignedUp] = useState(false); // Track if signup was successful
   const [errorMessage, setErrorMessage] = useState(""); // Track any signup errors
@@ -21,18 +20,17 @@ const SignupPage = () => {
     e.preventDefault();
     try {
       const response = await UserSignUp({
-        owner_name: formData.owner_name,
+        full_name: formData.full_name,
         email: formData.email,
-        password_hash: formData.password,
-        phone_number: formData.phone_number,
+        hash_password: formData.password,
       });
-      console.log('User signed up successfully:', response.data);
+      console.log('User signed up successfully:');
       setIsSignedUp(true); // Set the success state to true
       setFormData({
-        owner_name: '',
+        full_name: '',
         email: '',
-        password: '',
-        phone_number: ''
+        hash_password: '',
+
       }); // Reset form fields
     } catch (error) {
       console.error('Signup error:', error);
@@ -62,9 +60,9 @@ const SignupPage = () => {
               <label className="block text-sm font-medium text-gray-700">Owner Name</label>
               <input
                 type="text"
-                name="owner_name"
+                name="full_name"
                 placeholder="Owner Name"
-                value={formData.owner_name}
+                value={formData.full_name}
                 onChange={handleChange}
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
@@ -91,17 +89,7 @@ const SignupPage = () => {
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Phone Number</label>
-              <input
-                type="text"
-                name="phone_number"
-                placeholder="Phone Number"
-                value={formData.phone_number}
-                onChange={handleChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
+            
             <button
               type="submit"
               className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"

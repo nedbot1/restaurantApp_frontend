@@ -11,8 +11,17 @@ export async function fetchOrder(restaurantID:string): Promise<{ data:Order}> {
   return response.json();
 }
 
-export async function fetchRestaurant(accountId:string): Promise<{ data:Restaurant}> {
-    const response = await fetch(`http://localhost:4000/api/restaurants/account/${accountId}`);
+export async function fetchRestaurant(accountId: string): Promise<{ data: Restaurant }> {
+    const accessToken = localStorage.getItem('accessToken');
+  const response = await fetch(
+    `http://localhost:4000/api/restaurants/account/${accountId}`,
+    {
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+        "Content-Type": "application/json"
+      },
+    }
+  );
   
     if (!response.ok) {
       throw new Error('Failed to login, please check your credentials.');
@@ -21,21 +30,23 @@ export async function fetchRestaurant(accountId:string): Promise<{ data:Restaura
     return response.json();
   }
 
-  export async function createRestaurant(restaurant: Partial<Restaurant>): Promise<{ data:Restaurant}> {
-    const response = await fetch(`http://localhost:4000/api/restaurants`,{
-      method: 'POST',
+export async function createRestaurant(restaurant: Partial<Restaurant>): Promise<{ data: Restaurant }> {
+    const accessToken = localStorage.getItem("accessToken");
+    const response = await fetch(`http://localhost:4000/api/restaurants`, {
+      method: "POST",
       headers: {
+        "Authorization": `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
-        body: JSON.stringify({
-          restaurant: {
-            name: restaurant.name,
-            location: restaurant.location,
-            contact_number: restaurant.contact_number,
-            account_id: restaurant.account_id,
-          },
-      })
-    })
+      body: JSON.stringify({
+        restaurant: {
+          name: restaurant.name,
+          location: restaurant.location,
+          contact_number: restaurant.contact_number,
+          account_id: restaurant.account_id,
+        },
+      }),
+    });
     if (!response.ok) {
       throw new Error('Failed to login, please check your credentials.');
     }
