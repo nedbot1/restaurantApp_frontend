@@ -18,6 +18,7 @@ export default function LoginPage() {
       const accountId = response.account.id
       localStorage.setItem('accountID', accountId);
       setUserToken(response); 
+      console.log(response,"hey")
       setError(null); 
       router.push("/page/owner");
     } catch (error) {

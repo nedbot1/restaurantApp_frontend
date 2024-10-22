@@ -2,11 +2,13 @@
 import type { Restaurant, Menu, Table, Session, Order, Category } from "../type/type";
 
 export async function addRestaurant(restaurantData: Partial<Restaurant>): Promise<{ data: Restaurant[] }>{
+  const accessToken = localStorage.getItem("accessToken");
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/restaurants`,
     {
       method: "POST",
       headers: {
+        "Authorization": `Bearer ${accessToken}`,
         "ngrok-skip-browser-warning": "true",
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -23,11 +25,14 @@ export async function addRestaurant(restaurantData: Partial<Restaurant>): Promis
   return response.json();
 }
 
-export async function fetchRestaurant(accountId: string): Promise<{ data: Restaurant[] }>{
+export async function fetchRestaurant(accountId: string): Promise<{ 
+  data: Restaurant[] }>{
+const accessToken = localStorage.getItem("accessToken");
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/restaurants/account/${accountId}`,
       {
         headers: {
+          "Authorization": `Bearer ${accessToken}`,
           "ngrok-skip-browser-warning": "true",
           "Content-Type": "application/json",
           Accept: "application/json",

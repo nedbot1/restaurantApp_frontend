@@ -11,9 +11,8 @@ export interface SignUpResponse {
 
   export interface SignUpParams {
     account: {
-        owner_name: string,
+        full_name: string,
         email: string,
-         password_hash: string,
-        phone_number: string
+        hash_password: string,
       }
   }

@@ -2,20 +2,19 @@ import { SignUpResponse, SignUpParams } from "../type/signup";
 
 export async function UserSignUp(account: SignUpParams): Promise<{ data: SignUpResponse }> {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/register`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/accounts/create`,
     {
       method: "POST",
       headers: {
-        "ngrok-skip-browser-warning": "true",
+        // "ngrok-skip-browser-warning": "true",
         "Content-Type": "application/json",
         Accept: "application/json",
       },
       body: JSON.stringify({
         account: {
-          owner_name: account.owner_name,
+          full_name: account.full_name,
           email: account.email,
-          password_hash: account.password_hash,
-          phone_number: account.phone_number,
+          hash_password: account.hash_password,
         },
       }),
     }
